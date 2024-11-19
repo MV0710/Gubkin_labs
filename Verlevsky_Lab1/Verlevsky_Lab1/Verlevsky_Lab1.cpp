@@ -14,6 +14,9 @@ struct Pipe{
 int check_type_variable(string temp) {
 	int check = 0;
 	for (int i = 0; i < temp.size(); i++) {
+		if (int(temp[i]) > 31 && int(temp[i] < 48)) {
+			return 2;
+		}
 		if (int(temp[i]) > 47 && int(temp[i]) < 58) {
 			check++;
 		}
@@ -23,7 +26,7 @@ int check_type_variable(string temp) {
 	}
 	else {
 		if (check == 0) {
-			return 1;//это число
+			return 1;//это строка
 		}
 		else {
 			return 2;//некоретный ввод
@@ -34,16 +37,47 @@ int check_type_variable(string temp) {
 Pipe PIPE_add() {
 	Pipe new_pipe;
 	string temp_s;
-	int temp;
 	cout << "Введите название трубы" << endl;
-	cin >> temp_s;
+	getline(cin, temp_s);
+	while (check_type_variable(temp_s)!=1) {
+		cout << "Введите одну строку" << endl;
+		getline(cin, temp_s);
+	}
 	new_pipe.name = temp_s;
 	cout << "Введите длину трубы" << endl;
-	cin >> new_pipe.lenght;
+	getline(cin, temp_s);
+	while (check_type_variable(temp_s) != 0) {
+		
+		cout << "Введите одно положительное число" << endl;
+		getline(cin, temp_s);
+	}
+	new_pipe.lenght = stoi(temp_s);
 	cout << "Введите диаметр трубы" << endl;
-	cin >> new_pipe.diametr;
+	getline(cin, temp_s);
+	while (check_type_variable(temp_s) != 0) {
+		cout << "Введите одно положительное число" << endl;
+		getline(cin, temp_s);
+	}
+	new_pipe.diametr = stoi(temp_s);
 	cout << "Введите статус трубы (0-исправна,1-в ремонте) " << endl;
-	cin >> new_pipe.repair_status;
+	getline(cin, temp_s);
+	while (check_type_variable(temp_s) == 0) {
+		cout << "Введите 0 или 1" << endl;
+		if (stoi(temp_s) < 2) {
+			break;
+		}
+		else {
+			getline(cin, temp_s);
+		}
+	}
+	while (check_type_variable(temp_s) != 0) {
+		cout << "Введите 0 или 1" << endl;
+		getline(cin, temp_s);
+		if (check_type_variable(temp_s) == 0 && stoi(temp_s) > 1){
+			temp_s = "-1";
+		}
+	}
+	new_pipe.repair_status = stoi(temp_s);
 	return new_pipe;
 }
 
@@ -60,10 +94,10 @@ int main() {
 			PIPE_list.push_back(PIPE_add());
 		}
 		Main_menu();
-		cin >> n;
+		getline(cin, n);
 		while (check_type_variable(n) != 0) {
 			cout << "Некоретный ввод введите цифру из предложенных" << endl;
-			cin >> n;
+			getline(cin, n);
 		}
 	}
 	cout << "Работа окончена" << endl;
