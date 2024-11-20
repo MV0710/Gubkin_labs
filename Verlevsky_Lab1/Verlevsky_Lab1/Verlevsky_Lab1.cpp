@@ -115,7 +115,7 @@ CS CS_add() {
 	new_CS.quantity_workshop = stoi(temp_s);
 	cout << "Введите количество цехов в работе" << endl;
 	getline(cin, temp_s);
-	while(check_type_variable(temp_s) == 0) {
+	while (check_type_variable(temp_s) == 0) {
 		if (new_CS.quantity_workshop < stoi(temp_s)) {
 			temp_s = "-1";
 			cout << "Число цехов в работе должно быть не больше общего кол-ва цехов" << endl;
@@ -125,7 +125,7 @@ CS CS_add() {
 			break;
 		}
 	}
-	while (check_type_variable(temp_s) != 0 && check_type_variable(temp_s) != 3){
+	while (check_type_variable(temp_s) != 0 && check_type_variable(temp_s) != 3) {
 		cout << "Введите одно неотрицательное число" << endl;
 		getline(cin, temp_s);
 		if (check_type_variable(temp_s) == 0 || check_type_variable(temp_s) == 3) {
@@ -142,7 +142,7 @@ CS CS_add() {
 		cout << "Введите одно положительное число" << endl;
 		getline(cin, temp_s);
 	}*/
-	new_CS.efficiency = new_CS.workshops_in_work/new_CS.quantity_workshop;
+	new_CS.efficiency = double(new_CS.workshops_in_work) / double(new_CS.quantity_workshop);
 	return new_CS;
 }
 
@@ -167,6 +167,90 @@ void Show_subjets(vector <Pipe> P, vector <CS> C) {
 	}
 }
 
+vector <Pipe> Change_status_Pipe(vector <Pipe> Pipes) {
+	if (Pipes.size() == 0) {
+		cout << "Список труб пустой!" << endl;
+		return Pipes;
+	}
+	string choosen;
+	for (int i = 0; i < Pipes.size(); i++) {
+		cout << i + 1 << " " << Pipes[i].name << " " << Pipes[i].repair_status;
+	}
+	cout << "Выберете номер из списка" << endl;
+	getline(cin, choosen);
+	while (check_type_variable(choosen) == 0) {
+		if (stoi(choosen) > Pipes.size()) {
+			cout << "Такого номера нет в списке" << endl;
+			getline(cin, choosen);
+		}
+		else {
+			break;
+		}
+	}
+	while (check_type_variable(choosen) != 0) {
+		cout << "Введите одно положительное число" << endl;
+		getline(cin, choosen);
+	}
+	Pipes[stoi(choosen) - 1].repair_status = !(Pipes[stoi(choosen) - 1].repair_status);
+	cout << "Изменения успешно внесены" << endl;
+	return Pipes;
+}
+
+vector <CS> Change_status_CS(vector <CS> CSions) {
+	if (CSions.size() == 0) {
+		cout << "Список КС пустой!" << endl;
+		return CSions;
+	}
+	string choosen, number;
+	for (int i = 0; i < CSions.size(); i++) {
+		cout << "Номер" << i + 1 << "Название КС" << CSions[i].name << "Кол-во всех цехов" << CSions[i].quantity_workshop << "\nКоличество цехов в работе" << CSions[i].workshops_in_work << endl;
+	}
+	cout << "Выберете номер из списка" << endl;
+	getline(cin, choosen);
+	while (check_type_variable(choosen) == 0) {
+		if (stoi(choosen) > CSions.size()) {
+			cout << "Такого номера нет в списке" << endl;
+			getline(cin, choosen);
+		}
+		else {
+			break;
+		}
+	}
+	while (check_type_variable(choosen) != 0) {
+		cout << "Введите одно положительное число" << endl;
+		getline(cin, choosen);
+	}
+	cout << "Введите новое число цехов в работе" << endl;
+	getline(cin, number);
+	while (check_type_variable(number) == 0) {
+		if (CSions[stoi(choosen)-1].quantity_workshop < stoi(number)) {
+			number = "-1";
+			cout << "Число цехов в работе должно быть не больше общего кол-ва цехов" << endl;
+			getline(cin, number);
+		}
+		else {
+			break;
+		}
+	}
+	while (check_type_variable(number) != 0) {
+		cout << "Введите одно положительное число меньшее кол-ва общих цехов" << endl;
+		getline(cin, number);
+		if (check_type_variable(number) == 0 || check_type_variable(number) == 3) {
+			if (CSions[stoi(choosen) - 1].quantity_workshop < stoi(number)) {
+				cout << "Число цехов в работе должно быть не больше общего кол-ва цехов" << endl;
+				getline(cin, number);
+			}
+			else {
+				break;
+			}
+		}
+	}
+	CSions[stoi(choosen)-1].workshops_in_work = stoi(number);
+	CSions[stoi(choosen) - 1].efficiency = double(CSions[stoi(choosen) - 1].workshops_in_work) / double(CSions[stoi(choosen) - 1].quantity_workshop);
+	cout << "Изменения успешно внесены" << endl;
+	return CSions;
+}
+
 void Main_menu() {
 	cout << "Выберете Действие из предложенных: \n1.Добавить трубу \n2.Добавить КС \n3.Просмотр всех объектов \n4.Редактировать трубу \n5.Редактировать КС \n6.Сохранить \n7.Загрузить \n0.Выход" << endl;
 }
@@ -185,6 +269,12 @@ int main() {
 		}
 		if (stoi(n) == 3) {
 			Show_subjets(PIPE_list, CS_list);
+		}
+		if (stoi(n) == 4) {
+			PIPE_list=Change_status_Pipe(PIPE_list);
+		}
+		if (stoi(n) == 5) {
+			CS_list = Change_status_CS(CS_list);
 		}
 		Main_menu();
 		getline(cin, n);
