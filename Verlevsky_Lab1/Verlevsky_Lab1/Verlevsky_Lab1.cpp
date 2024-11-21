@@ -276,6 +276,22 @@ int main() {
 		if (stoi(n) == 5) {
 			CS_list = Change_status_CS(CS_list);
 		}
+		if (stoi(n) == 6) {
+			ofstream PIPE_FILE("PIPE_FILE.txt");
+			ofstream CS_FILE("CS_FILE.txt");
+			for (int i = 0; i < PIPE_list.size(); i++) {
+				PIPE_FILE << PIPE_list[i].name << " " << PIPE_list[i].lenght << " " << PIPE_list[i].diametr << " " << PIPE_list[i].repair_status << endl;
+			}
+			for (int i = 0; i < CS_list.size(); i++) {
+				CS_FILE << CS_list[i].name << " " << CS_list[i].quantity_workshop << " " << CS_list[i].workshops_in_work << " " << CS_list[i].efficiency << endl;
+			}
+			PIPE_FILE.close();
+			CS_FILE.close();
+		}
+		if (stoi(n) == 7) {
+			ifstream PIPE_FILE("PIPE_FILE.txt");
+			cout << PIPE_FILE << endl;
+		}
 		Main_menu();
 		getline(cin, n);
 		while (check_type_variable(n) != 0 && check_type_variable(n) != 3) {
