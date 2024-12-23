@@ -1,3 +1,4 @@
+#pragma once
 #include <fstream>
 
 class Pipe {
@@ -11,10 +12,16 @@ public:
     int length;
     int diameter;
     bool under_repair;
+
     Pipe();
+
     void read();
-    void display() const;
+
     void toggle_repair();
-    void save_data(const std::unordered_map<int, Pipe>& pipes, const std::string& file_name);
-    void load_data(std::unordered_map<int, Pipe>& pipes, const std::string& file_name);
+
+    void save_data(std::ofstream& out);
+
+    void load_data(std::ifstream& read);
+
+    friend std::ostream& operator << (std::ostream& out, const Pipe& p);
 };

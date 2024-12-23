@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/std:c++20 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +128,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CompressorStation.cpp" />
+    <ClCompile Include="Get_Correct.cpp" />
+    <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Verlevsky_l2.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CompressorStation.h" />
+    <ClInclude Include="Logging.h" />
+    <ClInclude Include="Pipe.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

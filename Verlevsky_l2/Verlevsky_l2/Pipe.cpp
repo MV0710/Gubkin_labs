@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+
 #include "Pipe.h"
 #include "Get_Correct.cpp"
 
@@ -20,54 +21,40 @@ void Pipe::read() {
     under_repair = false;
 }
 
-void Pipe::display() const {
-    std::cout << "ID: " << id << std::endl;
-    std::cout << "Name: " << name << std::endl;
-    std::cout << "Length (km): " << length << std::endl;
-    std::cout << "Diameter: " << diameter << std::endl;
-    std::cout << "Under repair: " << (under_repair ? "Yes" : "No") << std::endl;
+std::ostream& operator << (std::ostream& out, const Pipe& p) {
+    out << "ID: " << p.id << "\n";
+    out << "Name: " << p.name << "\n";
+    out << "Length (km): " << p.length << "\n";
+    out << "Diameter: " << p.diameter << "\n";
+    out << "Under repair: " << (p.under_repair ? "Yes" : "No") << "\n";
+    return out;
 }
 
 void Pipe::toggle_repair() {
     under_repair = !under_repair;
 }
 
-void Pipe::save_data(const std::unordered_map<int, Pipe>& pipes, const string& file_name) {
-    ofstream file(file_name);
-    if (!file) {
-        cerr << "Error opening file for writing " << file_name << endl;
-        return;
+void Pipe::save_data(ofstream& out) {
+    if (out.is_open()) {
+        out << "Pipe\n";
+        out << id << "\n";
+        out << name << "\n";
+        out << length << "\n";
+        out << diameter << "\n";
+        out << under_repair << "\n";
     }
-    for (const auto& pipeEntry : pipes) {
-        const Pipe& pipe = pipeEntry.second;
-        file << "Pipe\n";
-        file << pipe.id << "\n";
-        file << pipe.name << "\n";
-        file << pipe.length << "\n";
-        file << pipe.diameter << "\n";
-        file << pipe.under_repair << "\n";
-    }
-    file.close();
 }
 
-void Pipe::load_data(std::unordered_map<int, Pipe>& pipes, const string& file_name) {
-    ifstream file(file_name);
-    if (!file) {
-        cerr << "Error opening file for reading: " << file_name << endl;
-        return;
+void Pipe::load_data(ifstream& read) {
+    if (read.is_open()) {
+        read >> id;
+        read >> name;
+        read >> length;
+        read >> diameter;
+        read >> under_repair;
+
     }
-    pipes.clear();
-    string line;
-    while (getline(file, line)) {
-        if (line == "Pipe") {
-            Pipe pipe;
-            int pipe_id;
-            file >> pipe_id >> ws;
-            file >> ws;
-            file >> pipe.name >> pipe.length >> pipe.diameter >> pipe.under_repair;
-            pipes[pipe_id] = pipe;
-            file.ignore(10000, '\n');
-        }
+    else {
+        cerr << "Error!";
     }
-    file.close();
 }

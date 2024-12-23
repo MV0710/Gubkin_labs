@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 
 using namespace std;
@@ -11,6 +12,7 @@ public:
         :old_buf(src.rdbuf()), stream(src)
     {
     }
+
     ~redirect_output_wrapper() {
         stream.rdbuf(old_buf);
     }
