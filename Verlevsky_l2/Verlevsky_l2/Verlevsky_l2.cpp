@@ -4,7 +4,6 @@
 #include <chrono>
 #include <unordered_map>
 #include <unordered_set>
-
 #include "Pipe.h"
 #include "CompressorStation.h"
 #include "Logging.h"
@@ -18,7 +17,7 @@ int get_valid_id(const string& message, const std::unordered_map<int, K>& items)
     int id;
     cout << message;
     while (!(cin >> id) || items.find(id) == items.end()) {
-        cerr << "Error! Enter an exiting ID: ";
+        cerr << "Ошибка, введите корректный id ";
         cin.clear();
         cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
         cout << message;
@@ -65,33 +64,34 @@ void display_id(unordered_map<int, F>& dict, int id) {
 template <typename T>
 void edit_multiple_items(unordered_map<int, T>& dict, const unordered_set<int>& ids) {
     for (int id : ids) {
-        cout << "Are you sure you want to edit the pipe:\n";
+        cout << "Вы уверены что:\n";
         display_id(dict, id);
-        cout << "0-No 1-Yes\n";
+        cout << "0-Нет 1-Да\n";
         if (get_correct_value(0, 1)) {
             T& item = dict[id];
             item.toggle_repair();
         }
     }
-    cout << "Editing completed for the selected items." << endl;
+    cout << "Изменения выполнены." << endl;
 }
 
 template <typename T>
 void delete_multiple_items(unordered_map<int, T>& dict, const unordered_set<int>& ids) {
     for (int id : ids) {
-        cout << "Are you sure you want to delete the pipe:\n";
+        cout << "Вы уверены что хотите удалить трубу?:\n";
         display_id(dict, id);
-        cout << "0-No 1-Yes\n";
+        cout << "0-Нет 1-Да\n";
         if (get_correct_value(0, 1)) {
             dict.erase(id);
         }
     }
-    cout << "Deletion completed for the selected items." << endl;
+    cout << "Удаление успешно." << endl;
 }
 
 int main() {
+    setlocale(LC_ALL, "RUS");
+
     redirect_output_wrapper cerr_out(cerr);
-    //string time = format("{:%d-%m-%Y %H_%M_%S}", system_clock::now());
     ofstream logfile("log.txt");
     if (logfile) {
         cerr_out.redirect(logfile);
@@ -101,24 +101,24 @@ int main() {
     unordered_map<int, CompressorStation> stations;
 
     while (true) {
-        cout << "Menu:\n";
-        cout << "1. Add a pipe\n";
-        cout << "2. Add a compressor station\n";
-        cout << "3. View all objects\n";
-        cout << "4. Edit a pipe\n";
-        cout << "5. Edit a compressor station\n";
-        cout << "6. Save\n";
-        cout << "7. Load\n";
-        cout << "8. Delete a pipe\n";
-        cout << "9. Delete a compressor station\n";
-        cout << "10. Searching pipes by filter\n";
-        cout << "11. Searching compressor station by filter\n";
-        cout << "12. Batch editing of pipes\n";
-        cout << "13. Batch deletion of pipes\n";
-        cout << "0. Exit\n";
+        cout << "Меню:\n";
+        cout << "1. Добавить трубу\n";
+        cout << "2. Добавить КС\n";
+        cout << "3. Посмотреть все обьекты\n";
+        cout << "4. Изменить трубу\n";
+        cout << "5. Изменить \n";
+        cout << "6. Сохранить\n";
+        cout << "7. Загрузить\n";
+        cout << "8. Удалить трубу\n";
+        cout << "9. Удалить КС\n";
+        cout << "10. Поиск трубы по фильтру\n";
+        cout << "11. Поиск КС по фильтру\n";
+        cout << "12. Изменение труб пакетом\n";
+        cout << "13. Удаление труб пакетом\n";
+        cout << "0. Выход\n";
 
         int choice;
-        cout << "\nEnter a number from 0 to 13 to perform the corresponding action: ";
+        cout << "\nВведите число от 0 до 13: ";
         choice = get_correct_value<int>(0, 13);
         switch (choice) {
         case 0:
@@ -138,50 +138,50 @@ int main() {
         }
         case 3: {
             if (pipes.size() != 0) {
-                cout << "Pipes:\n";
+                cout << "Трубы:\n";
                 for (auto& [id, pipe] : pipes) {
                     cout << pipe << endl;
                 }
             }
             else {
-                cout << "No pipes\n";
+                cout << "Трубы отсутствуют\n";
             }
             if (stations.size() != 0) {
-                cout << "Compressor Stations:\n";
+                cout << "Компрессорные станции:\n";
                 for (auto& [id, station] : stations) {
                     cout << station << endl;
                 }
             }
             else {
-                cout << "No compressor stations\n";
+                cout << "КС отсутсвуют\n";
             }
             break;
         }
         case 4: {
             if (pipes.size() != 0) {
-                int pipe_id = get_valid_id("Enter the pipe ID for editing: ", pipes);
+                int pipe_id = get_valid_id("Введите id трубы для измененя", pipes);
                 Pipe& pipe = pipes[pipe_id];
                 pipe.toggle_repair();
-                cout << "The state of the pipe with ID " << pipe_id << " has been changed to 'Under repair: " << (pipe.under_repair ? "Yes" : "No") << "'\n";
+                cout << "Статус трубы с id " << pipe_id << "был изменен на" << (pipe.under_repair ? "Да" : "Нет") << "'\n";
             }
             else {
-                cout << "No data\n";
+                cout << "Нет данных\n";
             }
             break;
         }
         case 5: {
             if (stations.size() != 0) {
-                int station_id = get_valid_id("Enter the compressor station ID for editing: ", stations);
+                int station_id = get_valid_id("Введите id КС для изменения", stations);
                 CompressorStation& station = stations[station_id];
                 station.edit();
             }
             else {
-                cout << "No data\n";
+                cout << "Нет данных\n";
             }
             break;
         }
         case 6: {
-            cout << "Enter the file name to save ('file name.txt'): ";
+            cout << "Введите имя файла ";
             string file_name = get_str();
             ofstream out(file_name);
             for (auto const& p : pipes) {
@@ -194,16 +194,16 @@ int main() {
                     stations[cs.first].save_data(out);
                 }
             }
-            cout << "Data saved to file: " << file_name << endl;
+            cout << "Сохранено в файл: " << file_name << endl;
             break;
         }
         case 7: {
-            cout << "Enter the file name: ";
+            cout << "Введите имя файл: ";
             string file_name;
             string read_file = get_str();
             ifstream read(read_file);
             if (read.peek() == ifstream::traits_type::eof()) {
-                cout << "Error! There is no data in the file.\n";
+                cout << "Ошибка нет данных в файл.\n";
             }
             else {
                 string Name;
@@ -212,13 +212,13 @@ int main() {
                         Pipe read_pipe;
                         read_pipe.load_data(read);
                         pipes.insert({ read_pipe.getid(), read_pipe });
-                        cout << "Pipe data " << read_pipe.getid() << " downloaded from a file." << '\n';
+                        cout << "Данные труб " << read_pipe.getid() << " скачаны из файла." << '\n';
                     }
                     if (Name == "Compressor Station") {
                         CompressorStation read_ks;
                         read_ks.load_data(read);
                         stations.insert({ read_ks.getid(), read_ks });
-                        cout << "Compressor Station data " << read_ks.getid() << " downloaded from a file." << '\n';
+                        cout << "Данные КС " << read_ks.getid() << " скачаны из файла." << '\n';
                     }
                 }
             }
@@ -226,38 +226,38 @@ int main() {
         }
         case 8: {
             if (pipes.size() != 0) {
-                int pipe_id = get_valid_id("Enter the pipe ID for delete: ", pipes);
+                int pipe_id = get_valid_id("Введите id трубы для удаления: ", pipes);
                 pipes.erase(pipe_id);
-                cout << "Pipe with ID " << pipe_id << " has been deleted.\n";
+                cout << "Труба с  ID " << pipe_id << " была удалена.\n";
             }
             else {
-                cout << "No data\n";
+                cout << "Нет данных\n";
             }
             break;
         }
         case 9: {
             if (stations.size() != 0) {
-                int station_id = get_valid_id("Enter the ID of the compressor station to delete: ", stations);
+                int station_id = get_valid_id("Введите id КС для удаления: ", stations);
                 stations.erase(station_id);
-                cout << "Compressor station with ID " << station_id << " has been deleted.\n";
+                cout << "Станция КС с ID " << station_id << " была удалена.\n";
             }
             else {
-                cout << "No data\n";
+                cout << "Данных нет\n";
             }
             break;
         }
         case 10: {
             if (pipes.size() != 0) {
-                cout << "0 - By the 'under repair' status \n1 - By pipe name\nChoose by which filter you want to filter: ";
+                cout << "0 - По статусу в работе \n1 - По имени трубы\nВыберите фильтр: ";
                 if (get_correct_value(0, 1)) {
-                    cout << "Enter the name of the pipes you want to find: ";
+                    cout << "Введите имя трубы которую нужно найти: ";
                     string name = get_str();
                     for (int i : find_by_filter(pipes, filter_by_name, name)) {
                         display_id(pipes, i);
                     }
                 }
                 else {
-                    cout << "0 - pipe not under repair\n1 - pipe under repair\nEnter the number: ";
+                    cout << "0 - труба не в ремонте\n1 - труба в ремонте\nВведите номер: ";
                     bool under_repair = get_correct_value(0, 1);
                     for (int i : find_by_filter(pipes, filter_by_status, under_repair)) {
                         display_id(pipes, i);
@@ -265,22 +265,22 @@ int main() {
                 }
             }
             else {
-                cout << "No data\n";
+                cout << "Данных нет\n";
             }
             break;
         }
         case 11: {
             if (stations.size() != 0) {
-                cout << "0 - By the percentage of unused workshops\n1- By the name of compressor stations\nChoose by which filter you want to filter: ";
+                cout << "0 - По эффективности\n1- По имени КС\nВыберите фильтр: ";
                 if (get_correct_value(0, 1)) {
-                    cout << "Enter the name of the compressor station you want to find: ";
+                    cout << "Введите имя КС: ";
                     string name = get_str();
                     for (int i : find_by_filter(stations, filter_by_name, name)) {
                         display_id(stations, i);
                     }
                 }
                 else {
-                    cout << "Enter the efficiency of the compressor stations you want to find: ";
+                    cout << "Введите эффективность: ";
                     int non_working = get_correct_value(0, 100);
                     for (int i : find_by_filter(stations, filter_by_non_working, non_working)) {
                         display_id(stations, i);
@@ -288,58 +288,58 @@ int main() {
                 }
             }
             else {
-                cout << "No data\n";
+                cout << "Данных нет\n";
             }
             break;
         }
         case 12: {
             if (pipes.size() != 0) {
-                cout << "0 - By 'under repair' status\n1 - By pipe name\nChoose the criterion for selecting pipes for batch editing: ";
+                cout << "0 - По статусу в работе\n1 - По имени трубы\nВыберите какой фильтр использовать для пакетов: ";
                 int filter_choice = get_correct_value<int>(0, 1);
 
                 if (filter_choice == 0) {
-                    cout << "0 - Not under repair\n1 - Under repair\nChoose the pipe status: ";
+                    cout << "0 - Не в работе\n1 - В работе\nВыберите статус: ";
                     bool under_repair = get_correct_value(0, 1);
                     unordered_set<int> selected_pipes = find_by_filter(pipes, filter_by_status, under_repair);
                     edit_multiple_items(pipes, selected_pipes);
                 }
                 else if (filter_choice == 1) {
-                    cout << "Enter the pipe name for search: ";
+                    cout << "Введите имя для поиска: ";
                     string name = get_str();
                     unordered_set<int> selected_pipes = find_by_filter(pipes, filter_by_name, name);
                     edit_multiple_items(pipes, selected_pipes);
                 }
             }
             else {
-                cout << "No data\n";
+                cout << "Данных нет\n";
             }
             break;
         }
         case 13: {
             if (pipes.size() != 0) {
-                cout << "0 - By 'under repair' status\n1 - By pipe name\nChoose the criterion for selecting pipes for batch deletion: ";
+                cout << "0 - По статусу в работе\n1 - По имени труб\nВыберите критерий для удаления: ";
                 int filter_choice = get_correct_value<int>(0, 1);
 
                 if (filter_choice == 0) {
-                    cout << "0 - Not under repair\n1 - Under repair\nChoose the pipe status: ";
+                    cout << "0 - Не в ремонте\n1 - в ремонте\nВыберите статус: ";
                     bool under_repair = get_correct_value(0, 1);
                     unordered_set<int> selected_pipes = find_by_filter(pipes, filter_by_status, under_repair);
                     delete_multiple_items(pipes, selected_pipes);
                 }
                 else if (filter_choice == 1) {
-                    cout << "Enter the pipe name for search: ";
+                    cout << "Введите имя трубы для поиска: ";
                     string name = get_str();
                     unordered_set<int> selected_pipes = find_by_filter(pipes, filter_by_name, name);
                     delete_multiple_items(pipes, selected_pipes);
                 }
             }
             else {
-                cout << "No data\n";
+                cout << "Нет данных\n";
             }
             break;
         }
         default: {
-            cerr << "Invalid choice. Please try again.\n";
+            cerr << "Неверный выбор повторите.\n";
             break;
         }
         }

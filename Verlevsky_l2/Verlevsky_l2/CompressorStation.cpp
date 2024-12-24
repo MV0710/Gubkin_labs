@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-
 #include "CompressorStation.h"
 #include "Get_Correct.cpp"
 
@@ -11,33 +10,33 @@ CompressorStation::CompressorStation()
     id = Nextid++;
 }
 void CompressorStation::read() {
-    cout << "Enter the compressor station name: ";
+    cout << "Введите имя КС: ";
     name = get_str();
-    std::cout << "Enter the number of workshops: ";
+    std::cout << "Введите кол-во цехов: ";
     num_workshops = get_correct_value<int>(0, INT_MAX);
-    std::cout << "Enter the number of workshops in operation: ";
+    std::cout << "Введите кол-во цехов в работе: ";
     num_workshops_in_operation = get_correct_value<int>(0, num_workshops);
-    std::cout << "Enter the efficiency (0 to 100): ";
+    std::cout << "Введите эффективность: ";
     efficiency = get_correct_value<double>(0.0, 100.0);
 }
 
 std::ostream& operator << (std::ostream& out, const CompressorStation& cs) {
     out << "Id: " << cs.id << "\n";
-    out << "Name: " << cs.name << "\n";
-    out << "Number of workshops: " << cs.num_workshops << "\n";
-    out << "Number of workshops in operation: " << cs.num_workshops_in_operation << "\n";
-    out << "Efficiency: " << cs.efficiency << "\n";
+    out << "Имя: " << cs.name << "\n";
+    out << "Кол-во цехов: " << cs.num_workshops << "\n";
+    out << "Кол-во цехов в работе: " << cs.num_workshops_in_operation << "\n";
+    out << "Эффективность: " << cs.efficiency << "\n";
     return out;
 }
 
 void CompressorStation::edit() {
-    std::cout << "Enter the new number of workshops in operation: ";
+    std::cout << "Введите новое кол-во цехов в работе: ";
     num_workshops_in_operation = get_correct_value<int>(0, num_workshops);
 }
 
 void CompressorStation::save_data(ofstream& out) {
     if (out.is_open()) {
-        out << "Compressor Station\n";
+        out << "КС\n";
         out << id << "\n";
         out << name << "\n";
         out << num_workshops << "\n";
@@ -55,6 +54,6 @@ void CompressorStation::load_data(ifstream& read) {
         read >> efficiency;
     }
     else {
-        cout << "Error!";
+        cout << "Ошибка в КС!";
     }
 }

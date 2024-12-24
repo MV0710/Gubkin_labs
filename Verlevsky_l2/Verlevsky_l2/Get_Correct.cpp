@@ -20,7 +20,7 @@ T get_correct_value(T min, T max) {
     while (cin.fail() || cin.peek() != '\n' || value < min || value > max) {
         cin.clear();
         cin.ignore(10000, '\n');
-        cerr << "ERROR: Enter a valid value: ";
+        cerr << "Ошибка введите корректное значение: ";
         cin >> value;
         cerr << value << "\n";
     }

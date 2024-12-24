@@ -12,21 +12,21 @@ Pipe::Pipe()
 }
 
 void Pipe::read() {
-    cout << "Enter the pipe name: ";
+    cout << "Введите имя трубы: ";
     name = get_str();
-    std::cout << "Enter the length of the pipe (in km): ";
+    std::cout << "Введите длину трубы ";
     length = get_correct_value<int>(1, INT_MAX);
-    std::cout << "Enter the diameter of the pipe: ";
+    std::cout << "Введите диаметр трубы: ";
     diameter = get_correct_value<int>(1, INT_MAX);
     under_repair = false;
 }
 
 std::ostream& operator << (std::ostream& out, const Pipe& p) {
     out << "ID: " << p.id << "\n";
-    out << "Name: " << p.name << "\n";
-    out << "Length (km): " << p.length << "\n";
-    out << "Diameter: " << p.diameter << "\n";
-    out << "Under repair: " << (p.under_repair ? "Yes" : "No") << "\n";
+    out << "Имя: " << p.name << "\n";
+    out << "Длина: " << p.length << "\n";
+    out << "Диаметр: " << p.diameter << "\n";
+    out << "Статус в ремонте " << (p.under_repair ? "Да" : "Нет") << "\n";
     return out;
 }
 
@@ -36,7 +36,7 @@ void Pipe::toggle_repair() {
 
 void Pipe::save_data(ofstream& out) {
     if (out.is_open()) {
-        out << "Pipe\n";
+        out << "Труба\n";
         out << id << "\n";
         out << name << "\n";
         out << length << "\n";
@@ -55,6 +55,6 @@ void Pipe::load_data(ifstream& read) {
 
     }
     else {
-        cerr << "Error!";
+        cerr << "Ошибка в трубе!";
     }
 }
