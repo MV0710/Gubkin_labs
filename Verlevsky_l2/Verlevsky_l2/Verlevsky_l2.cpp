@@ -208,13 +208,13 @@ int main() {
             else {
                 string Name;
                 while (getline(read, Name)) {
-                    if (Name == "Pipe") {
+                    if (Name == "Труба") {
                         Pipe read_pipe;
                         read_pipe.load_data(read);
                         pipes.insert({ read_pipe.getid(), read_pipe });
                         cout << "Данные труб " << read_pipe.getid() << " скачаны из файла." << '\n';
                     }
-                    if (Name == "Compressor Station") {
+                    if (Name == "КС") {
                         CompressorStation read_ks;
                         read_ks.load_data(read);
                         stations.insert({ read_ks.getid(), read_ks });

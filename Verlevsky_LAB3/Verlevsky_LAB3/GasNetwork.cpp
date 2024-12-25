@@ -156,6 +156,10 @@ void GasNetwork::connectPipesToStations() {
 
         std::cout << "Enter the ID of the output compressor station: ";
         out_id = get_correct_value<int>(1, INT_MAX);
+        if (in_id == out_id) {
+            cout << "Wrong! There must be other CS" << endl;
+            out_id = get_correct_value<int>(1, INT_MAX);
+        }
 
         pipe_diameter = get_correct_diameter();
 
@@ -180,6 +184,7 @@ void GasNetwork::connectPipesToStations() {
         std::cout << "Pipe connected successfully.\n";
     }
     else {
-        std::cout << "Insufficient data to establish connections.\n";
+        Pipe pipe;
+        GasNetwork::add_pipe(pipe);
     }
 }
